@@ -1,0 +1,59 @@
+Variable = a container for a value. Behaves as the value that it contains
+
+Checking a datatype: 
+	print(type(name))
+Converting a datatype: 
+	type casting - convert the data type of a value to another data type
+	Temporary change = print(int(y))
+	Permanent change y=2.0,y=int(y) 
+	Str(age) converts age from an int to a string
+	
+String:
+	Series of Characters
+	Use '' or ""
+	Example: 
+	
+	name="Bro"
+	print(name) 
+	
+	name="Bro"
+	print("Hello "+name)
+	
+	#first_name="Joshua"
+	#last_name="Rickson"
+	#full_name=first_name+""+last_name
+	#print("Hello"+first_name+",Howareyou?")
+	#print("Hello"+full_name)
+	
+Int:
+	Number (No quotes)
+	
+	#age=21
+	#age=age+1
+	#age+=1
+	#print(age)
+	#print("Yourageis:"+str(age))
+	
+Float:
+	Floating point number (a decimal number)
+	
+	#height=250.55
+	
+Boolean:
+	(True or False) REQUIRES CAPITAL
+	
+	#human=False
+	#print(human)
+	
+Scope = The region that a variable is recognized
+		A variable is only available from inside the region it is created
+		A global and locally scoped versions of a variable can be created
+
+def display_name():
+    name = "Rickson" #local scope (avail only inside the function)
+    print(name)
+
+	- Local
+	- Enclosing
+	- Global
+	- Built-In
