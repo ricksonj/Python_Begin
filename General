@@ -1,0 +1,68 @@
+Download from python.org/downloads (add to path)
+Download IDE from jetbrains.com/pycharm/ (open source) ( add launchers to path)
+
+
+Pycharm - new project - add python file - disable add welcome script
+
+Format under - Settings -> Editor -> Font/Colour Scheme
+
+Run to execute
+Terminal Window at bottom shows output
+
+Print('') - can be " or ' quotes
+
+Comment with #
+Comment Bulk with Ctrl+/
+
+Logical Operators:
+
+Use == when saying equal to , = sign for assigning a value
+
+ and / or works for operators
+
+ not reverses one or more conditional statements flipping from TRUE test to FALSE
+
+None for a blank
+
+Exceptions: 2:43
+Events detected during exception that interrupt the flow of a program try/except/else/ finally (finally always runs)
+ try:
+ zerodivisionerror (trying to divide by 0)
+ valueerror (trying to divide by word)
+
+
+try:
+
+except ZeroDivisionError as e:
+   print("..")
+except ValueError as e:
+   print(e)
+   print("..")
+except exception as e:
+   print("..")
+else:
+   print(result)
+Finally:
+----------------------------------------------------------------------
+Download from python.org/downloads (add to path)
+Download IDE from jetbrains.com/pycharm/ (open source) ( add launchers to path)
+
+
+Pycharm - new project - add python file - disable add welcome script
+
+
+Run to execute
+Terminal Window at bottom shows output
+
+Print('') - can be " or ' quotes
+
+Format under - Settings -> Editor -> Font/Colour Scheme
+
+
+Variables:
+
+Variable = a container for a value. Behaves as the value that it contains
+
+	Types - 
+	String = Series of Characters , use '' or ""
+
