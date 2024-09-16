@@ -1,0 +1,83 @@
+MSL_Customers_Anon = 
+          /* JR - Anon_Index is a CC that flags 1 for 100-000-000 customer records CC_FILTER is a CC that flags 1 for Phonecall_Incoming / Webchat_Sender_Email_Outgoing / Anon_IncidentResolutionOnly / Webchat & Task_Completed / Phonecall & Task_Completed */
+        VAR P11 =
+            //Part1: Group by known customer, MSL team with a usage count and index
+            SUMMARIZE (
+                FILTER ( 'Reach_MSL', 'Reach_MSL'[ACTIVITY_FILTER] = 1 ),
+                Reach_MSL[Customerref],
+                'Reach_MSL'[msl_team],
+                "Usage", COUNTROWS ( 'Reach_MSL' )
+            )
+        VAR P22 =
+            //Part2: Add Column of concat Teams that Customer has used in time period
+            ADDCOLUMNS (
+                P11,
+                "Concat_TeamsID",
+                    CONCATENATEX (
+                        FILTER ( P11, [Customerref] > 100000000 && [Customerref] = EARLIER ( [Customerref] ) ),
+                        [msl_team],
+                        "&",
+                        [msl_team], ASC
+                    )
+            )
+        VAR T33 =
+            //Part3: Group by Concat_TeamsID & MSL_Team, summing usage count and summing users 
+            //       and Add columns of Anon & Known Interactions for that MSL_Team (not Concat_TeamID specific)
+            ADDCOLUMNS (
+                SUMMARIZE ( P22, [Concat_TeamsID], [msl_team] ),
+                "KnownUsers_ID",
+                    COUNTROWS (
+                        FILTER (
+                            P22,
+                            [Customerref] > 100000000
+                                && [msl_team] = EARLIER ( [msl_team] )
+                                && [Concat_TeamsID] = EARLIER ( [Concat_TeamsID] )
+                        )
+                    ),
+                "KnownUsage_ID",
+                    SUMX (
+                        FILTER (
+                            P22,
+                            [Customerref] > 100000000
+                                && [msl_team] = EARLIER ( [msl_team] )
+                                && [Concat_TeamsID] = EARLIER ( [Concat_TeamsID] )
+                        ),
+                        [Usage]
+                    ),
+                "AnonUsage_Team",
+                    SUMX (
+                        FILTER ( P11, [Customerref] = 100000000 && [msl_team] = EARLIER ( [msl_team] ) ),
+                        [Usage]
+                    ),
+                "KnownUsage_Team",
+                    SUMX (
+                        FILTER ( P11, [Customerref] > 100000000 && [msl_team] = EARLIER ( [msl_team] ) ),
+                        [Usage]
+                    )
+            )
+        VAR FINI =
+            //Part5: Add column calculating Anon Users for that Concat_TeamsID / Team combination
+            ADDCOLUMNS (
+                T33,
+                "AnonCustomersCalc",
+                    [AnonUsage_Team]
+                        * DIVIDE (
+                            DIVIDE ( [KnownUsage_ID], [KnownUsage_Team] ) //Proportion that ID contributes to the Team
+                            ,
+                            DIVIDE ( [KnownUsage_ID], [KnownUsers_ID] ) //Amount of Usage per user for Known for that ID
+                        )
+            )
+        RETURN
+            //For Output: Want different calculation for MSL Teams compared to MSL groups so account for that using ISINSCOPE
+            IF (
+                ISINSCOPE ( 'zLookup_Teams'[Teams_Index] ) = TRUE (),
+                SUMX ( FINI, [AnonCustomersCalc] ),
+                SUMX (
+                    GROUPBY (
+                        FINI,
+                        [Concat_TeamsID],
+                        "TopAnon", MAXX ( CURRENTGROUP (), [AnonCustomersCalc] )
+                    ),
+                    [TopAnon]
+                )
+            )
