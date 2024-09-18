@@ -1,0 +1,23 @@
+------------Rock Paper Scissors Game I wrote--------------
+import random
+options = ['Rock', 'Paper', 'Scissors']
+
+while True:
+    comp = random.choice(options)
+    user = None
+    while user not in options:
+        user = input("What do you choice? Rock, Paper or Scissors?: ").capitalize()
+    concat = user + ' : ' + comp
+
+    if comp == user:
+        print('Draw!')
+    elif concat in ['Rock : Scissors', 'Paper : Rock', 'Scissors : Paper']:
+        print("User Wins :) ")
+    elif concat in ['Scissors : Rock', 'Rock : Paper', 'Paper : Scissors']:
+        print("Computer Wins :( ")
+
+    play_again = input("Play Again? Y/N: ").lower()
+    if play_again != "y":
+        break
+
+print("Bye")
